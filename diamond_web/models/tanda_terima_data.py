@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .ilap import ILAP
+from .jenis_data_ilap import JenisDataILAP
+from .periode_pengiriman import PeriodePengiriman
 
 
 class TandaTerimaData(models.Model):
@@ -11,8 +13,23 @@ class TandaTerimaData(models.Model):
         ILAP,
         on_delete=models.PROTECT,
         db_column="id_ilap",
-        verbose_name="ILAP"
+        verbose_name="ILAP" 
     )
+
+    nama_jenis_data = models.ForeignKey(
+        JenisDataILAP,
+        on_delete=models.PROTECT,
+        db_column="nama_jenis_data",
+        verbose_name="Nama Jenis Data"
+    )
+
+    periode_data = models.ForeignKey(
+        PeriodePengiriman,
+        on_delete=models.PROTECT,
+        db_column="deskripsi",
+        verbose_name="Deskripsi"
+    )
+
     deskripsi = models.CharField(max_length=255, verbose_name="Deskripsi")
     id_perekam = models.ForeignKey(
         User,
@@ -30,18 +47,3 @@ class TandaTerimaData(models.Model):
 
     def __str__(self):
         return f"{self.nomor_tanda_terima}"
-
-    @property
-    def nama_ILAP(self):
-        return self.id_ILAP.nama_ILAP
-
-    @property
-    def daftar_jenis_data(self):
-        return ", ".join(
-            [j.nama_jenis_data for j in self.id_ILAP.jenisdataILAP_set.all()]
-        )
-
-    @property
-    def periode_data(self):
-        data = self.id_ILAP.jenisdataILAP_set.first()
-        return data.periode_data if data else None
