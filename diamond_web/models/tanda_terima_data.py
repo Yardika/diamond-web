@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .ilap import ILAP
 from .jenis_data_ilap import JenisDataILAP
 from .periode_pengiriman import PeriodePengiriman
+from .tiket import Tiket
 
 
 class TandaTerimaData(models.Model):
@@ -27,10 +28,18 @@ class TandaTerimaData(models.Model):
         PeriodePengiriman,
         on_delete=models.PROTECT,
         db_column="deskripsi",
-        verbose_name="Deskripsi"
+        verbose_name="Periode Data"
     )
 
     deskripsi = models.CharField(max_length=255, verbose_name="Deskripsi")
+
+    tgl_terima_dip = models.ForeignKey(
+        Tiket,
+        on_delete=models.PROTECT,
+        db_column="tgl_terima_dip",
+        verbose_name="Tanggal Terima DIP"
+    )
+
     id_perekam = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
